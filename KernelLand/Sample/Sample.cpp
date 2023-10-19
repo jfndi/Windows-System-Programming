@@ -38,7 +38,7 @@ DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath)
 	RtlGetVersion(&VersionInformation);
 
 	KdPrint(("Sample entry point called.\n"));
-	KdPrint(("Running on Windows %d.%d.%d", VersionInformation.dwMajorVersion,
+	KdPrint(("Running on Windows %d.%d.%d\n", VersionInformation.dwMajorVersion,
 		VersionInformation.dwMinorVersion, VersionInformation.dwBuildNumber));
 
 	DriverObject->DriverUnload = SampleUnload;
