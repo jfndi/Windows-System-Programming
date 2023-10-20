@@ -3,6 +3,11 @@
 
 #include "..\..\KernelLand\PriorityBooster\PriorityBoosterCommon.h"
 
+/**
+ * A simple test program for the PriorityBooster device driver.
+ * We communicate with the software device via Io control commands.
+ */
+
 int Error(const char* message)
 {
 	printf("%s (error=%d)\n", message, GetLastError());
