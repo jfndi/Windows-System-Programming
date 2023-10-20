@@ -29,6 +29,8 @@ extern "C"
 NTSTATUS
 DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING)
 {
+	KdPrint(("Entering PriorityBooster DriverEntry.\n"));
+
 	DriverObject->DriverUnload = PriorityBoosterUnload;
 
 	/*
@@ -37,6 +39,11 @@ DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING)
 	 */
 	DriverObject->MajorFunction[IRP_MJ_CREATE] = PriorityBoosterCreateClose;
 	DriverObject->MajorFunction[IRP_MJ_CLOSE] = PriorityBoosterCreateClose;
+
+	/**
+	 * The Device Control routine used to change the thread priority. 
+	 */
+	DriverObject->MajorFunction[IRP_MJ_DEVICE_CONTROL] = PriorityBoosterDeviceControl;
 
 	UNICODE_STRING devName = RTL_CONSTANT_STRING(L"\\Device\\Booster");
 
@@ -65,12 +72,16 @@ DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING)
 		return status;
 	}
 
+	KdPrint(("Leaving PriorityBooster DriverEntry.\n"));
+
 	return STATUS_SUCCESS;
 }
 
 void
 PriorityBoosterUnload(_In_ PDRIVER_OBJECT DriverObject)
 {
+	KdPrint(("Calling PriorityBooster Unload function.\n"));
+
 	UNICODE_STRING symLink = RTL_CONSTANT_STRING(L"\\??\\PriorityBooster");
 	IoDeleteSymbolicLink(&symLink);
 
@@ -81,11 +92,15 @@ _Use_decl_annotations_
 NTSTATUS
 PriorityBoosterCreateClose(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 {
+	KdPrint(("Entering PriorityCreateClose function.\n"));
+
 	UNREFERENCED_PARAMETER(DeviceObject);
 
 	Irp->IoStatus.Status = STATUS_SUCCESS;
 	Irp->IoStatus.Information = 0;
 	IoCompleteRequest(Irp, IO_NO_INCREMENT);
+
+	KdPrint(("Leaving PriorityCreateClose function.\n"));
 
 	return STATUS_SUCCESS;
 }
@@ -94,6 +109,8 @@ _Use_decl_annotations_
 NTSTATUS
 PriorityBoosterDeviceControl(_In_ PDEVICE_OBJECT, _In_ PIRP Irp)
 {
+	KdPrint(("Entering PriorityDeviceControl function.\n"));
+
 	auto stack = IoGetCurrentIrpStackLocation(Irp);
 	auto status = STATUS_SUCCESS;
 
@@ -142,6 +159,8 @@ PriorityBoosterDeviceControl(_In_ PDEVICE_OBJECT, _In_ PIRP Irp)
 	Irp->IoStatus.Status = STATUS_SUCCESS;
 	Irp->IoStatus.Information = 0;
 	IoCompleteRequest(Irp, IO_NO_INCREMENT);
+
+	KdPrint(("Leaving PriorityDeviceControl function.\n"));
 
 	return status;
 }
