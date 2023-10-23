@@ -24,7 +24,7 @@ main(int argc, const char* argv[])
 		return EXIT_FAILURE;
 	}
 
-	HANDLE hDevice = CreateFile(L"\\\\.\\PriorityBooster", GENERIC_WRITE,
+	HANDLE hDevice = CreateFile(L"\\\\.\\PriorityBooster2", GENERIC_WRITE,
 		FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, 0, nullptr);
 	if (hDevice == INVALID_HANDLE_VALUE)
 		return Error("Failed to open device.");
