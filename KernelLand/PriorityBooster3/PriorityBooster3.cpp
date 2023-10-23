@@ -26,7 +26,7 @@ NTSTATUS
 PriorityBooster3CreateClose(_In_ PDEVICE_OBJECT DeviceObject, _In_ PIRP Irp);
 
 /**
- * This function is called when comunictaing with our software device. 
+ * This function is called when comunicating with our software device. 
  */
 NTSTATUS
 PriorityBooster3DeviceControl(_In_ PDEVICE_OBJECT, _In_ PIRP Irp);
