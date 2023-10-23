@@ -18,9 +18,16 @@
 void
 PriorityBooster3Unload(_In_ PDRIVER_OBJECT DriverObject);
 
+/**
+ * Priority booster driver create/close function.
+ * This function is called by the Create*,Close* familly functions.
+ */
 NTSTATUS
 PriorityBooster3CreateClose(_In_ PDEVICE_OBJECT DeviceObject, _In_ PIRP Irp);
 
+/**
+ * This function is called when comunictaing with our software device. 
+ */
 NTSTATUS
 PriorityBooster3DeviceControl(_In_ PDEVICE_OBJECT, _In_ PIRP Irp);
 
