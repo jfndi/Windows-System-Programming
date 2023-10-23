@@ -45,7 +45,7 @@ DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath)
 
 	NT_ASSERT(DeviceObject);
 
-	UNICODE_STRING symLink = RTL_CONSTANT_STRING(L"\\??\\Booster2");
+	UNICODE_STRING symLink = RTL_CONSTANT_STRING(L"\\??\\PriorityBooster2");
 	status = IoCreateSymbolicLink(&symLink, &devName);
 	if (!NT_SUCCESS(status))
 	{
@@ -64,7 +64,7 @@ PriorityBooster2Unload(_In_ PDRIVER_OBJECT DriverObject)
 {
 	LogInfo("PriorityBooster2 Unload called.\n");
 
-	UNICODE_STRING symLink = RTL_CONSTANT_STRING(L"\\??\\Booster2");
+	UNICODE_STRING symLink = RTL_CONSTANT_STRING(L"\\??\\PriorityBooster2");
 	IoDeleteSymbolicLink(&symLink);
 
 	IoDeleteDevice(DriverObject->DeviceObject);
