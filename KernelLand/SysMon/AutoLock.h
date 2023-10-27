@@ -10,7 +10,7 @@ public:
 		_lock.Lock();
 	}
 
-	ÃutoLock()
+	~AutoLock()
 	{
 		_lock.Unlock();
 	}
