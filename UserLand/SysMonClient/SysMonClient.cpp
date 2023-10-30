@@ -57,6 +57,26 @@ DisplayInfo(BYTE* buffer, DWORD size)
 			break;
 		}
 
+		case ItemType::ThreadCreate:
+		{
+			DisplayTime(header->Time);
+
+			auto info = reinterpret_cast<ThreadCreateExitInfo*>(buffer);
+			print("Thread {:#08X} in Process {:#08X} has been created.\n", info->ThreadId,
+				info->ProcessId);
+			break;
+		}
+
+		case ItemType::ThreadExit:
+		{
+			DisplayTime(header->Time);
+
+			auto info = reinterpret_cast<ThreadCreateExitInfo*>(buffer);
+			print("Thread {:#08X} in Process {:#08X} has exited.\n", info->ThreadId,
+				info->ProcessId);
+			break;
+		}
+
 		default:
 			break;
 		}
