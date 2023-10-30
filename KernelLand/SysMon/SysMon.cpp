@@ -15,6 +15,10 @@ void
 OnProcessNotify(PEPROCESS Process, HANDLE ProcessId,
 	PPS_CREATE_NOTIFY_INFO CreateInfo);
 
+void
+OnThreadNotify(HANDLE ProcessId, HANDLE ThreadId,
+	BOOLEAN Create);
+
 extern "C"
 NTSTATUS
 DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING)
@@ -54,6 +58,13 @@ DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING)
 		if (!NT_SUCCESS(status))
 		{
 			KdPrint((DRIVER_PREFIX "failed to register process callback (0x%08X).\n", status));
+			break;
+		}
+
+		status = PsSetCreateThreadNotifyRoutine(OnThreadNotify);
+		if (!NT_SUCCESS(status))
+		{
+			KdPrint((DRIVER_PREFIX "failed to register thread callback (0x%08X).\n", status));
 			break;
 		}
 
@@ -258,4 +269,27 @@ SysMonCreateClose(_In_ PDEVICE_OBJECT, _In_ PIRP Irp)
 	IoCompleteRequest(Irp, IO_NO_INCREMENT);
 
 	return STATUS_SUCCESS;
+}
+
+void
+OnThreadNotify(HANDLE ProcessId, HANDLE ThreadId,
+	BOOLEAN Create)
+{
+	auto size = sizeof(FullItem<ThreadCreeateExitInfo>);
+	auto info = (FullItem<ThreadCreeateExitInfo>*)ExAllocatePool2(POOL_FLAG_PAGED,
+		size, DRIVER_TAG);
+	if (info == nullptr)
+	{
+		KdPrint((DRIVER_PREFIX "Failed to allocate memory.\n"));
+		return;
+	}
+
+	auto& item = info->Data;
+	KeQuerySystemTimePrecise(&item.Time);
+	item.Size = sizeof(item);
+	item.Type = Create ? ItemType::ThreadCreate : ItemType::ThreadExit;
+	item.ProcessId = HandleToULong(ProcessId);
+	item.ThreadId = HandleToULong(ThreadId);
+
+	PushItem(&info->Entry);
 }
