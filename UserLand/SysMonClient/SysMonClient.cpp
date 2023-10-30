@@ -19,7 +19,7 @@ DisplayTime(LARGE_INTEGER& time)
 
 	::FileTimeToSystemTime(reinterpret_cast<FILETIME*>(&time), &st);
 	print("{:#02}:{:#02d}:{:#02d}.{:#03d}: ",
-		st.wHour, st.wMinute, st.wMilliseconds);
+		st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
 }
 
 DWORD
