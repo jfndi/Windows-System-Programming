@@ -245,6 +245,11 @@ SysMonUnload(_In_ PDRIVER_OBJECT DriverObject)
 	PsSetCreateProcessNotifyRoutineEx(OnProcessNotify, TRUE);
 
 	/*
+	 * Unregistering thread notification might be a good idea. 
+	 */
+	PsRemoveCreateThreadNotifyRoutine(OnThreadNotify);
+
+	/*
 	 * Business as usual... 
 	 */
 	UNICODE_STRING symLink = RTL_CONSTANT_STRING(L"\\??\\sysmon");
