@@ -19,6 +19,8 @@ extern "C"
 NTSTATUS
 DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING)
 {
+	KdPrint((DRIVER_PREFIX "Entering DriverEntry entry point.\n"));
+
 	auto status = STATUS_SUCCESS;
 
 	InitializeListHead(&g_Globals.ItemsHead);
@@ -113,7 +115,7 @@ OnProcessNotify(PEPROCESS, HANDLE ProcessId,
 			allocSize += commandLineSize;
 		}
 
-		auto info = (FullItem<ProcessCreateInfo>*)ExAllocatePool2(PagedPool,
+		auto info = (FullItem<ProcessCreateInfo>*)ExAllocatePool2(POOL_FLAG_PAGED,
 			allocSize, DRIVER_TAG);
 		if (info == nullptr)
 		{
@@ -144,7 +146,7 @@ OnProcessNotify(PEPROCESS, HANDLE ProcessId,
 		/*
 		 * Process exit. 
 		 */
-		auto info = (FullItem<ProcessExitInfo>*)ExAllocatePool2(PagedPool,
+		auto info = (FullItem<ProcessExitInfo>*)ExAllocatePool2(POOL_FLAG_PAGED,
 			sizeof(FullItem<ProcessExitInfo>), DRIVER_TAG);
 		if (info == nullptr)
 		{
