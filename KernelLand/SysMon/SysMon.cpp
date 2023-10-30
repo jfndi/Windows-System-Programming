@@ -275,8 +275,8 @@ void
 OnThreadNotify(HANDLE ProcessId, HANDLE ThreadId,
 	BOOLEAN Create)
 {
-	auto size = sizeof(FullItem<ThreadCreeateExitInfo>);
-	auto info = (FullItem<ThreadCreeateExitInfo>*)ExAllocatePool2(POOL_FLAG_PAGED,
+	auto size = sizeof(FullItem<ThreadCreateExitInfo>);
+	auto info = (FullItem<ThreadCreateExitInfo>*)ExAllocatePool2(POOL_FLAG_PAGED,
 		size, DRIVER_TAG);
 	if (info == nullptr)
 	{

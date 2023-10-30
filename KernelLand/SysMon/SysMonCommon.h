@@ -46,7 +46,7 @@ struct ProcessCreateInfo : ItemHeader
 	USHORT CommandLineOffset;
 };
 
-struct ThreadCreeateExitInfo : ItemHeader
+struct ThreadCreateExitInfo : ItemHeader
 {
 	ULONG ThreadId;
 	ULONG ProcessId;
