@@ -158,7 +158,7 @@ FindProcess(ULONG pid)
 NTSTATUS
 ProcessProtectDeviceControl(PDEVICE_OBJECT, PIRP Irp)
 {
-	auto stack = IoGetNextIrpStackLocation(Irp);
+	auto stack = IoGetCurrentIrpStackLocation(Irp);
 
 	auto status = STATUS_SUCCESS;
 	auto len = 0;
@@ -246,8 +246,6 @@ ProcessProtectDeviceControl(PDEVICE_OBJECT, PIRP Irp)
 
 		::memset(g_Data.Pids, 0, sizeof(g_Data.Pids));
 		g_Data.PidsCount = 0;
-
-		break;
 	}
 		break;
 
