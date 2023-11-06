@@ -244,7 +244,7 @@ ProcessProtectDeviceControl(PDEVICE_OBJECT, PIRP Irp)
 	{
 		auto size = stack->Parameters.DeviceIoControl.OutputBufferLength;
 
-		if (size % sizeof(ULONG) != 0)
+		if (size % sizeof(ULONG) != 0 || size == 0)
 		{
 			status = STATUS_INVALID_BUFFER_SIZE;
 			break;
@@ -252,33 +252,45 @@ ProcessProtectDeviceControl(PDEVICE_OBJECT, PIRP Irp)
 
 		AutoLock locker(g_Data.Lock);
 
-		for (auto i = 0; i < g_Data.PidsCount; i++)
-		{
-			if (g_Data.Pids[i])
-				len++;
-		}
-		if (len == 0)
+		if (g_Data.PidsCount == 0)
 			break;
 
-		if (size < len * sizeof(ULONG))
-		{
-			status = STATUS_BUFFER_TOO_SMALL;
-			break;
-		}
-		
-		auto index = 0U;
+		ULONG* buffer = nullptr;
+		auto allocsize = g_Data.PidsCount * sizeof(ULONG);
 		auto data = (ULONG*)Irp->AssociatedIrp.SystemBuffer;
 		for (auto i = 0; i < g_Data.PidsCount; i++)
 		{
-			if (g_Data.Pids[i] == 0)
+			if (g_Data.Pids[i])
+			{
+				if (buffer == nullptr)
+				{
+					buffer = (ULONG*)ExAllocatePool2(POOL_FLAG_PAGED, allocsize,
+						'PrPr');
+					if (buffer == nullptr)
+					{
+						status = STATUS_NO_MEMORY;
+						break;
+					}
+					::memset(buffer, 0, allocsize);
+				}
+				
+				buffer[len] = g_Data.Pids[i];
+				len++;
+				if (len == size / sizeof(ULONG))
+					break;
+			}
+			else
 				continue;
-
-			data[index] = g_Data.Pids[i];
-			index++;
-			if (index == len)
-				break;
 		}
+
+		if (!NT_SUCCESS(status))
+			break;
+
 		len *= sizeof(ULONG);
+		::memcpy(data, buffer, len);
+
+		if (buffer)
+			ExFreePool(buffer);
 	}
 	break;
 
