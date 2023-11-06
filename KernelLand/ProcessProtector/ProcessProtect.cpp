@@ -161,7 +161,7 @@ ProcessProtectDeviceControl(PDEVICE_OBJECT, PIRP Irp)
 	auto stack = IoGetCurrentIrpStackLocation(Irp);
 
 	auto status = STATUS_SUCCESS;
-	auto len = 0;
+	auto len = 0U;
 
 	switch (stack->Parameters.DeviceIoControl.IoControlCode)
 	{
@@ -239,6 +239,48 @@ ProcessProtectDeviceControl(PDEVICE_OBJECT, PIRP Irp)
 		}
 	}
 		break;
+
+	case IOCTL_PROCESS_PROTECT_QUERY_PIDS:
+	{
+		auto size = stack->Parameters.DeviceIoControl.OutputBufferLength;
+
+		if (size % sizeof(ULONG) != 0)
+		{
+			status = STATUS_INVALID_BUFFER_SIZE;
+			break;
+		}
+
+		AutoLock locker(g_Data.Lock);
+
+		for (auto i = 0; i < g_Data.PidsCount; i++)
+		{
+			if (g_Data.Pids[i])
+				len++;
+		}
+		if (len == 0)
+			break;
+
+		if (size < len * sizeof(ULONG))
+		{
+			status = STATUS_BUFFER_TOO_SMALL;
+			break;
+		}
+		
+		auto index = 0U;
+		auto data = (ULONG*)Irp->AssociatedIrp.SystemBuffer;
+		for (auto i = 0; i < g_Data.PidsCount; i++)
+		{
+			if (g_Data.Pids[i] == 0)
+				continue;
+
+			data[index] = g_Data.Pids[i];
+			index++;
+			if (index == len)
+				break;
+		}
+		len *= sizeof(ULONG);
+	}
+	break;
 
 	case IOCTL_PROCESS_PROTECT_CLEAR:
 	{
