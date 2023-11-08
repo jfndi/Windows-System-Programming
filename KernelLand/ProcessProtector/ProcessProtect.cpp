@@ -1,19 +1,5 @@
 #include "pch.h"
 
-/*
- * ProcessProtector:
- * =================
- * This driver is used to protect specific programs against "external" kill
- * attempts. By external I mean separate processes trying to stop the target
- * process by using the "TerminateProcess()" Windows API.
- * For this purpose it uses IOCTL requests:
- * - IOCTL_PROCESS_PROTECT_BY_PID: to add a specific PID to the list of
- *   protected processes.
- * - IOCTL_PROCESS_UNPROTECT_BY_PID: to remove the specific PID from the
- *   protected list.
- * - IOCTL_PROCESS_PROTECT_QUERY_PIDS: to list the protected processes.
- */
-
 #include "ProcessProtectCommon.h"
 #include "ProcessProtect.h"
 #include "AutoLock.h"

@@ -19,10 +19,6 @@ void
 OnThreadNotify(HANDLE ProcessId, HANDLE ThreadId,
 	BOOLEAN Create);
 
-NTSTATUS
-OnRegistryNotify(PVOID CallbackContext, PVOID Argument1,
-	PVOID Argument2);
-
 extern "C"
 NTSTATUS
 DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING)
@@ -37,9 +33,6 @@ DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING)
 	PDEVICE_OBJECT DeviceObject = nullptr;
 	UNICODE_STRING symLink = RTL_CONSTANT_STRING(L"\\??\\sysmon");
 	bool symLinkCreated = false;
-	bool processCallbacks = false;
-	bool threadCallbacks = false;
-
 	do
 	{
 		UNICODE_STRING devName = RTL_CONSTANT_STRING(L"\\Device\\sysmon");
@@ -67,7 +60,6 @@ DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING)
 			KdPrint((DRIVER_PREFIX "failed to register process callback (0x%08X).\n", status));
 			break;
 		}
-		processCallbacks = true;
 
 		status = PsSetCreateThreadNotifyRoutine(OnThreadNotify);
 		if (!NT_SUCCESS(status))
@@ -75,25 +67,11 @@ DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING)
 			KdPrint((DRIVER_PREFIX "failed to register thread callback (0x%08X).\n", status));
 			break;
 		}
-		threadCallbacks = true;
-
-		UNICODE_STRING altitude = RTL_CONSTANT_STRING(L"7657.124");
-		status = CmRegisterCallbackEx(OnRegistryNotify, &altitude, DriverObject,
-			nullptr, &g_Globals.RegCookie, nullptr);
-		if (!NT_SUCCESS(status))
-		{
-			KdPrint((DRIVER_PREFIX "failed to set registry callback (0x%08X)\n", status));
-			break;
-		}
 
 	} while (false);
 
 	if (!NT_SUCCESS(status))
 	{
-		if (threadCallbacks)
-			PsRemoveCreateThreadNotifyRoutine(OnThreadNotify);
-		if (processCallbacks)
-			PsSetCreateProcessNotifyRoutineEx(OnProcessNotify, TRUE);
 		if (symLinkCreated)
 			IoDeleteSymbolicLink(&symLink);
 		if (DeviceObject)
@@ -262,11 +240,6 @@ void
 SysMonUnload(_In_ PDRIVER_OBJECT DriverObject)
 {
 	/*
-	 * Unregister registry notifications. 
-	 */
-	CmUnRegisterCallback(g_Globals.RegCookie);
-
-	/*
 	 * Unregister process notifications. 
 	 */
 	PsSetCreateProcessNotifyRoutineEx(OnProcessNotify, TRUE);
@@ -324,59 +297,4 @@ OnThreadNotify(HANDLE ProcessId, HANDLE ThreadId,
 	item.ThreadId = HandleToULong(ThreadId);
 
 	PushItem(&info->Entry);
-}
-
-NTSTATUS
-OnRegistryNotify(PVOID, PVOID Arg1, PVOID Arg2)
-{
-	static const WCHAR machine[] = L"\\REGISTRY\\MACHINE\\";
-
-	switch ((REG_NOTIFY_CLASS)(ULONG_PTR)Arg1)
-	{
-	case RegNtPostSetValueKey:
-		auto args = (REG_POST_OPERATION_INFORMATION*)Arg2;
-		if (!NT_SUCCESS(args->Status))
-			break;
-
-		PCUNICODE_STRING name;
-		NTSTATUS status;
-		status = CmCallbackGetKeyObjectIDEx(&g_Globals.RegCookie, args->Object,
-			nullptr, &name, 0);
-		if (NT_SUCCESS(status))
-		{
-			if (::wcsncmp(name->Buffer, machine, ARRAYSIZE(machine) - 1) == 0)
-			{
-				auto preInfo = (REG_SET_VALUE_KEY_INFORMATION*)args->PreInformation;
-				NT_ASSERT(preInfo);
-
-				auto size = sizeof(FullItem<RegistrySetValueInfo>);
-				auto info = (FullItem<RegistrySetValueInfo>*)ExAllocatePool2(POOL_FLAG_PAGED,
-					size, DRIVER_TAG);
-				if (info == nullptr)
-					break;
-				RtlZeroMemory(info, size);
-
-				auto& item = info->Data;
-				KeQuerySystemTimePrecise(&item.Time);
-				item.Size = sizeof(item);
-				item.Type = ItemType::RegistrySetValue;
-
-				item.ProcessId = HandleToULong(PsGetCurrentProcessId());
-				item.ThreadId = HandleToULong(PsGetCurrentThreadId());
-
-				::wcsncpy_s(item.KeyName, name->Buffer, name->Length / sizeof(WCHAR) - 1);
-				::wcsncpy_s(item.ValueName, preInfo->ValueName->Buffer,
-					preInfo->ValueName->Length / sizeof(WCHAR) - 1);
-				item.DataType = preInfo->Type;
-				item.DataSize = preInfo->DataSize;
-				::memcpy(item.Data, preInfo->Data, min(item.DataSize, sizeof(item.Data)));
-
-				PushItem(&info->Entry);
-			}
-		}
-
-		break;
-	}
-
-	return STATUS_SUCCESS;
 }
