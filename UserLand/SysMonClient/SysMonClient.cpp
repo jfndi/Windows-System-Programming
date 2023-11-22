@@ -7,6 +7,8 @@
 
 using namespace std;
 
+using wstring_view = basic_string_view<wchar_t>;
+
 constexpr void print(string_view str_fmt, auto&&... args)
 {
 	fputs(vformat(str_fmt, make_format_args(args...)).c_str(), stdout);
@@ -27,6 +29,14 @@ Error(const char* msg)
 {
 	print("SysMonClient: {}. Error {:#08X}.\n", msg, GetLastError());
 	return EXIT_FAILURE;
+}
+
+void
+DisplayBinary(const UCHAR* buffer, DWORD size)
+{
+	for (DWORD i = 0; i < size; i++)
+		print("{:#02X}", buffer[i]);
+	print("\n");
 }
 
 void
@@ -74,6 +84,37 @@ DisplayInfo(BYTE* buffer, DWORD size)
 			auto info = reinterpret_cast<ThreadCreateExitInfo*>(buffer);
 			print("Thread {:#08X} in Process {:#08X} has exited.\n", info->ThreadId,
 				info->ProcessId);
+			break;
+		}
+
+		case ItemType::RegistrySetValue:
+		{
+			DisplayTime(header->Time);
+			auto info = reinterpret_cast<RegistrySetValueInfo*>(buffer);
+			printf("Registry write PID=%d: %ws\\%ws type: %d size: %d data:",
+				info->ProcessId, info->KeyName, info->ValueName,
+				info->DataType, info->DataSize);
+
+			switch (info->DataType)
+			{
+			case REG_DWORD:
+				printf("0x%08X\n", *(DWORD*)info->Data);
+				break;
+
+			case REG_SZ:
+			case REG_EXPAND_SZ:
+				printf("%ws\n", (WCHAR*)info->Data);
+				break;
+
+			case REG_BINARY:
+				DisplayBinary(info->Data, min(info->DataSize, sizeof(info->Data)));
+				break;
+
+				// add other cases... (REG_QWORD, REG_LINK, etc.)
+			default:
+				DisplayBinary(info->Data, min(info->DataSize, sizeof(info->Data)));
+				break;
+			}
 			break;
 		}
 
