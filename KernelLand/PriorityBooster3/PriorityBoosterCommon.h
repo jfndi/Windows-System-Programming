@@ -1,3 +1,15 @@
+////
+// Project:
+//	06 PriorityBooster3 
+//
+// Module:
+//	PriorityBoosterCommon.h Created on 23-10-2023 @ 9:41 AM
+//
+// Author (sort of):
+//	Jean-François Ndi
+//
+// Work heavily based on Pavel Yosifovich's "Windows Kernel Programming".
+//// 
 #pragma once
 
 #ifndef CTL_CODE

@@ -1,3 +1,16 @@
+////
+// Project:
+//	Beep 
+//
+// Module:
+//	Beep.cpp Created on 28-11-2023 @ 8:33 AM
+//
+// Author (sort of):
+//	Jean-François Ndi
+//
+// Work heavily based on Pavel Yosifovich's "Windows Kernel Programming".
+//// 
+
 /*
  * Beep:
  * =====

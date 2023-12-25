@@ -1,3 +1,15 @@
+////
+// Project:
+//	ZeroTester 
+//
+// Module:
+//	ZeroTester.cpp Created on 25-10-2023 @ 5:58 AM
+//
+// Author (sort of):
+//	Jean-François Ndi
+//
+// Work heavily based on Pavel Yosifovich's "Windows Kernel Programming".
+//// 
 #include "pch.h"
 
 HANDLE hDevice = INVALID_HANDLE_VALUE;

@@ -1,6 +1,6 @@
 ﻿extensions: designer.cs generated.cs
 extensions: .cs .cpp .h
-//
+////
 // Project:
 //	%Project% 
 //
@@ -10,8 +10,8 @@ extensions: .cs .cpp .h
 // Author (sort of):
 //	%UserDisplayName%
 //
-// Work heavily based on Pavel Yosifovich's "Windows Kernel Programming"
-// 
+// Work heavily based on Pavel Yosifovich's "Windows Kernel Programming".
+//// 
 extensions: .aspx .ascx
 <%-- 
 Copyright (c) 2011 rubicon IT GmbH

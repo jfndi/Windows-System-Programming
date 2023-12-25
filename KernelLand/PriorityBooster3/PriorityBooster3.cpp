@@ -1,3 +1,15 @@
+////
+// Project:
+//	06 PriorityBooster3 
+//
+// Module:
+//	PriorityBooster3.cpp Created on 23-10-2023 @ 9:41 AM
+//
+// Author (sort of):
+//	Jean-François Ndi
+//
+// Work heavily based on Pavel Yosifovich's "Windows Kernel Programming".
+//// 
 #include <ntifs.h>
 #include <ntddk.h>
 

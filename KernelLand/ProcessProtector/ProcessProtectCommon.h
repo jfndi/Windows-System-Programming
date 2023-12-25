@@ -1,3 +1,15 @@
+////
+// Project:
+//	09 ProcessProtector 
+//
+// Module:
+//	ProcessProtectCommon.h Created on 3-11-2023 @ 9:31 AM
+//
+// Author (sort of):
+//	Jean-François Ndi
+//
+// Work heavily based on Pavel Yosifovich's "Windows Kernel Programming".
+//// 
 #pragma once
 
 #define PROCESS_PROTECT_NAME L"ProcessProtect"

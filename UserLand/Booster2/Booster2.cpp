@@ -1,3 +1,15 @@
+////
+// Project:
+//	Booster2 
+//
+// Module:
+//	Booster2.cpp Created on 23-10-2023 @ 6:07 AM
+//
+// Author (sort of):
+//	Jean-François Ndi
+//
+// Work heavily based on Pavel Yosifovich's "Windows Kernel Programming".
+//// 
 #include <windows.h>
 #include <stdio.h>
 

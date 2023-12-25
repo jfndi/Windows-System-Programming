@@ -1,3 +1,15 @@
+////
+// Project:
+//	08 SysMon 
+//
+// Module:
+//	SysMon.cpp Created on 26-10-2023 @ 6:05 AM
+//
+// Author (sort of):
+//	Jean-François Ndi
+//
+// Work heavily based on Pavel Yosifovich's "Windows Kernel Programming".
+//// 
 #include "pch.h"
 
 Globals g_Globals;

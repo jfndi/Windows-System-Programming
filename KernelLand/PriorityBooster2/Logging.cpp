@@ -1,3 +1,15 @@
+////
+// Project:
+//	05 PriorityBooster2 
+//
+// Module:
+//	Logging.cpp Created on 23-10-2023 @ 5:02 AM
+//
+// Author (sort of):
+//	Jean-François Ndi
+//
+// Work heavily based on Pavel Yosifovich's "Windows Kernel Programming".
+//// 
 #include <ntddk.h>
 #include <stdarg.h>
 #include "PriorityBooster2.h"

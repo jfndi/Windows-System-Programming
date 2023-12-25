@@ -1,3 +1,15 @@
+////
+// Project:
+//	Protect 
+//
+// Module:
+//	protect.cpp Created on 5-11-2023 @ 8:01 AM
+//
+// Author (sort of):
+//	Jean-François Ndi
+//
+// Work heavily based on Pavel Yosifovich's "Windows Kernel Programming".
+//// 
 #include "pch.h"
 
 #include "..\..\KernelLand\ProcessProtector\ProcessProtectCommon.h"

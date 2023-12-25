@@ -1,3 +1,15 @@
+////
+// Project:
+//	02 Sample 
+//
+// Module:
+//	Sample.cpp Created on 18-10-2023 @ 4:29 AM
+//
+// Author (sort of):
+//	Jean-François Ndi
+//
+// Work heavily based on Pavel Yosifovich's "Windows Kernel Programming".
+//// 
 #include <ntddk.h>
 
 /**

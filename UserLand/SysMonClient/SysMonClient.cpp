@@ -1,3 +1,15 @@
+////
+// Project:
+//	SysMonClient 
+//
+// Module:
+//	SysMonClient.cpp Created on 28-10-2023 @ 12:26 PM
+//
+// Author (sort of):
+//	Jean-François Ndi
+//
+// Work heavily based on Pavel Yosifovich's "Windows Kernel Programming".
+//// 
 #include <Windows.h>
 #include <iostream>
 #include <string_view>

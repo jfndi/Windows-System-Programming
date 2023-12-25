@@ -1,3 +1,15 @@
+////
+// Project:
+//	08 SysMon 
+//
+// Module:
+//	SysMonCommon.h Created on 26-10-2023 @ 5:49 AM
+//
+// Author (sort of):
+//	Jean-François Ndi
+//
+// Work heavily based on Pavel Yosifovich's "Windows Kernel Programming".
+//// 
 #pragma once
 
 enum class ItemType : short
