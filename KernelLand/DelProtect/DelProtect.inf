@@ -1,14 +1,15 @@
-;
-; DelProtect.inf
-;
+;;;
+;;; DelProtect.inf
+;;;
 
 [Version]
 Signature	= "$WINDOWS NT$"
 Class		= "Undelete"
 ClassGuid	= {fe8f1572-c67a-48c0-bbac-0b5c6d66cafb}
 Provider	= %ManufacturerName%
-DriverVer	=
+DriverVer	= "12/25/2023","01.0.0.0"
 CatalogFile	= DelProtect.cat
+PnpLockDown	= 1
 
 [DestinationDirs]
 DefaultDestDir			= 12
@@ -56,7 +57,7 @@ DelProtect.sys	= 1,,
 
 [Strings]
 ManufacturerName	= "WindowsDriversBook"
-SeviceDescription	= "DelProtect Mini-Filter Driver"
+ServiceDescription	= "DelProtect Mini-Filter Driver"
 ServiceName			= "DelProtect"
 DriverName			= "DelProtect"
 DiskId1				= "DelProtect Device Installation Disk"
