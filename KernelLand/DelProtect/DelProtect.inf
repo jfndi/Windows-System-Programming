@@ -40,7 +40,7 @@ LoadOrderGroup	= "FS Undelete filters"
 AddReg			= Minifilter.AddRegistry
 
 [MiniFilter.AddRegistry]
-HKR,,"DebugFlags",0x00010001,0x0
+HKR,,"DebugFlags",0x00010001 ,0x0
 HKR,,"SupportedFeatures",0x00010001,0x3
 HKR,,"Instances","DefaultInstance",0x00000000,%DefaultInstance%
 HKR,,"Instances\"%Instance1.Name%,"Altitude",0x0000000,%Instance1.Altitude%
