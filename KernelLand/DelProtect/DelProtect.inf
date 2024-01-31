@@ -50,7 +50,7 @@ HKR,,"Instances\"%Instance1.Name%,"Flags",0x00010001,%Instance1.Flags%
 %DriverName%.sys
 
 [SourceDisksFiles]
-DelProtect.sys	= 1,,
+10DelProtect.sys = 1,,
 
 [SourceDisksNames]
 1	= %DiskId1%,,,
@@ -59,7 +59,7 @@ DelProtect.sys	= 1,,
 ManufacturerName	= "WindowsDriversBook"
 ServiceDescription	= "DelProtect Mini-Filter Driver"
 ServiceName			= "DelProtect"
-DriverName			= "DelProtect"
+DriverName			= "10DelProtect"
 DiskId1				= "DelProtect Device Installation Disk"
 
 ; Instance specific information
